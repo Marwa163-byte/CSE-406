@@ -1,0 +1,56 @@
+
+def findWaitingTime(processes, n, bt, wt, at, service_time):
+    service_time[0] = at[0]  
+    wt[0] = 0 
+
+    for i in range(1, n):
+       
+        service_time[i] = max(service_time[i - 1] + bt[i - 1], at[i])
+
+   
+        wt[i] = service_time[i] - at[i]
+
+        if wt[i] < 0:
+            wt[i] = 0
+
+#Turn Around Time
+def findTurnAroundTime(processes, n, bt, wt, tat, service_time, at):
+    for i in range(n):
+        #Completion time=start time + burst time
+        completion_time = service_time[i] + bt[i]
+        # Turnaround=Completion-Arrival time
+        tat[i] = completion_time - at[i]
+
+
+def findavgTime(processes, n, bt, at):
+    wt = [0] * n
+    tat = [0] * n
+    service_time = [0] * n
+
+    
+    findWaitingTime(processes, n, bt, wt, at, service_time)
+
+    
+    findTurnAroundTime(processes, n, bt, wt, tat, service_time, at)
+
+    
+    print("Processes   Burst Time   Arrival Time   Waiting Time   Turn Around Time   Completion Time")
+    total_wt = 0
+    total_tat = 0
+    for i in range(n):
+        completion_time = service_time[i] + bt[i]
+        total_wt += wt[i]
+        total_tat += tat[i]
+        print("   ", processes[i], "\t\t", bt[i], "\t\t", at[i],
+              "\t\t", wt[i], "\t\t", tat[i], "\t\t     ", completion_time)
+    print("\nAverage waiting time = %.2f" % (total_wt / n))
+   
+    
+
+if __name__ == "__main__":
+    processes = [1, 2, 3, 4]
+    n = 4
+    burst_time = [3, 2, 1, 4]
+    arrival_time = [0, 1, 2, 3]
+
+    findavgTime(processes, n, burst_time, arrival_time)
